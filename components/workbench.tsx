@@ -155,6 +155,8 @@ export function Workbench() {
   const [filter, setFilter] = useState<'all' | ItemType>('all');
   const [saving, setSaving] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
+  const reportDirty = useRef(false);
+  const onReportDirtyChange = useCallback((dirty: boolean) => { reportDirty.current = dirty; }, []);
 
   const visibleGroups = useMemo(() => {
     const keyword = search.trim().toLocaleLowerCase();
@@ -197,6 +199,7 @@ export function Workbench() {
       setSession(nextSession);
       setAuthReady(true);
       if (!nextSession) {
+        reportDirty.current = false;
         setItems([]);
         setReportOpen(false);
       }
@@ -299,6 +302,7 @@ export function Workbench() {
 
   const signOut = async () => {
     if (!supabase) return;
+    if (reportDirty.current && !window.confirm('每日汇报有未保存修改，退出将丢弃这些修改。确定退出？')) return;
     await supabase.auth.signOut();
   };
 
@@ -477,7 +481,7 @@ export function Workbench() {
           setReportOpen(false);
           requestAnimationFrame(() => document.getElementById('private')?.scrollIntoView());
         }}><ArrowLeft />返回私密空间</Button>
-        <DailyReportModule key={session.user.id} />
+        <DailyReportModule key={session.user.id} userId={session.user.id} onDirtyChange={onReportDirtyChange} />
       </main>
     </div>}
     </>
