@@ -11,6 +11,7 @@ import {
 import type { Session } from '@supabase/supabase-js';
 import {
   ArrowUpRight,
+  ArrowLeft,
   BookOpen,
   BriefcaseBusiness,
   Check,
@@ -61,6 +62,8 @@ import type {
   PrivateItem,
 } from '@/lib/database.types';
 import { getSupabaseBrowserClient } from '@/lib/supabase';
+import { DailyReportModule } from '@/components/daily-report';
+import { releases } from '@/lib/releases';
 
 const linkGroups = [
   {
@@ -151,6 +154,7 @@ export function Workbench() {
   const [draft, setDraft] = useState<ItemDraft>(emptyDraft);
   const [filter, setFilter] = useState<'all' | ItemType>('all');
   const [saving, setSaving] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
 
   const visibleGroups = useMemo(() => {
     const keyword = search.trim().toLocaleLowerCase();
@@ -192,7 +196,10 @@ export function Workbench() {
     const { data } = supabase.auth.onAuthStateChange((_event, nextSession) => {
       setSession(nextSession);
       setAuthReady(true);
-      if (!nextSession) setItems([]);
+      if (!nextSession) {
+        setItems([]);
+        setReportOpen(false);
+      }
     });
 
     return () => data.subscription.unsubscribe();
@@ -296,7 +303,8 @@ export function Workbench() {
   };
 
   return (
-    <main className="site-shell">
+    <>
+    <main className="site-shell" hidden={reportOpen && Boolean(session)}>
       <header className="topbar">
         <a className="brand" href="#top" aria-label="返回首页">
           <span className="brand-mark"><Leaf size={17} strokeWidth={2.2} /></span>
@@ -306,6 +314,8 @@ export function Workbench() {
           <a className="is-active" href="#links">导航</a>
           <a href="#now">现在</a>
           <a href="#about">关于</a>
+          <a href="#changelog">升版日志</a>
+          {session && <a href="#private">私密空间</a>}
         </nav>
         {session ? (
           <Button variant="outline" className="login-link" onClick={signOut}>
@@ -396,6 +406,7 @@ export function Workbench() {
         error={dataError}
         onLogin={() => setLoginOpen(true)}
         onCreate={openCreate}
+        onOpenReport={() => { setReportOpen(true); window.scrollTo(0, 0); }}
         onEdit={openEdit}
         onDelete={setDeleteItem}
       />
@@ -411,8 +422,19 @@ export function Workbench() {
         </p>
       </section>
 
+      <section className="release-log" id="changelog" aria-labelledby="release-log-title">
+        <p className="section-kicker">CHANGELOG</p>
+        <h2 id="release-log-title">升版记录日志</h2>
+        {releases.map((release) => <article className="release-entry" key={release.version}>
+          <div className="release-meta"><strong>v{release.version}</strong><time dateTime={release.date}>{release.date}</time></div>
+          <h3>{release.title}</h3>
+          <ul>{release.changes.map((change) => <li key={change}>{change}</li>)}</ul>
+          <p>{release.note}</p>
+        </article>)}
+      </section>
+
       <footer>
-        <span>© 2026 我的工作台</span>
+        <span>© 2026 我的工作台 · <a href="#changelog">v{releases[0].version} · 升版日志</a></span>
         <span className="footer-security"><ShieldCheck size={14} /> Supabase Auth + RLS</span>
       </footer>
 
@@ -449,6 +471,16 @@ export function Workbench() {
         </AlertDialogContent>
       </AlertDialog>
     </main>
+    {session && <div hidden={!reportOpen}>
+      <main className="report-page">
+        <Button variant="outline" onClick={() => {
+          setReportOpen(false);
+          requestAnimationFrame(() => document.getElementById('private')?.scrollIntoView());
+        }}><ArrowLeft />返回私密空间</Button>
+        <DailyReportModule key={session.user.id} />
+      </main>
+    </div>}
+    </>
   );
 }
 
@@ -464,6 +496,7 @@ interface PrivateDeskProps {
   error: string;
   onLogin: () => void;
   onCreate: () => void;
+  onOpenReport: () => void;
   onEdit: (item: PrivateItem) => void;
   onDelete: (item: PrivateItem) => void;
 }
@@ -480,6 +513,7 @@ function PrivateDesk({
   error,
   onLogin,
   onCreate,
+  onOpenReport,
   onEdit,
   onDelete,
 }: PrivateDeskProps) {
@@ -521,6 +555,14 @@ function PrivateDesk({
           <p>{session.user.email}</p>
         </div>
         <Button className="create-button" onClick={onCreate}><Plus /> 新建记录</Button>
+      </div>
+
+      <div className="private-feature-grid" aria-label="私密空间功能">
+        <button className="private-feature-card" onClick={onOpenReport}>
+          <span className="private-feature-icon"><ListChecks size={22} /></span>
+          <span><strong>每日工作汇报</strong><small>工作计划、提交资料、寻求帮助与会议预约</small></span>
+          <ArrowUpRight size={20} aria-hidden="true" />
+        </button>
       </div>
 
       <div className="metric-grid">
