@@ -267,6 +267,114 @@ footer { width: min(1180px, calc(100% - 48px)); margin: 5rem auto 0; padding-top
 .release-entry h3 { font-size: 1.1rem; margin: 1rem 0 .7rem; font-weight: 650; }
 .release-entry ul { padding-left: 1.3rem; list-style: disc; font-size: 1rem; line-height: 1.8; }
 .release-entry p { color: #725528; font-size: .875rem; line-height: 1.7; margin-top: 1rem; }
+
+/* Public library: compact entrance, generous reading surface. */
+.intro.intro-compact { display: block; padding: 2.6rem 0 2.4rem; width: min(1180px, calc(100% - 48px)); }
+.intro.intro-compact h1 { margin: 0; font-family: "Noto Serif SC", "Songti SC", "SimSun", serif; font-size: clamp(1.65rem, 3.2vw, 2.4rem); font-weight: 500; letter-spacing: .14em; line-height: 1.5; }
+.public-modules { width: min(1180px, calc(100% - 48px)); margin: 1.25rem auto; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.public-module-card { display: flex; align-items: center; gap: 1rem; padding: 1.2rem 1.4rem; border: 1px solid var(--border); border-radius: 14px; background: var(--card); transition: border-color .2s, background .2s; }
+.public-module-card:hover { border-color: #64806f; background: #edf1e7; }
+.public-module-icon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: #e0e9d7; color: var(--primary); flex: 0 0 auto; }
+.public-module-card strong { display: block; font-size: 1rem; }
+.public-module-card small { display: block; font-size: .875rem; color: #617064; margin-top: .35rem; line-height: 1.5; }
+.public-module-card > svg { margin-left: auto; flex: 0 0 auto; width: 18px; }
+.public-modules-single { grid-template-columns: minmax(0, 1fr); }
+.quick-access-compact { padding: 1.25rem 1.4rem; border-radius: 14px; }
+.quick-access-compact .section-heading { align-items: center; gap: .75rem; margin-bottom: 1rem; }
+.quick-access-compact .section-heading h2 { margin: 0; font-size: 1.15rem; }
+.quick-access-compact .search-shell input { font-size: .875rem; }
+.quick-link-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .65rem; }
+.quick-link-grid a { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .8rem 1rem; border: 1px solid var(--border); border-radius: 10px; background: #f9f8f3; }
+.quick-link-grid a:hover { background: #edf1e7; border-color: #64806f; }
+.quick-link-grid a strong, .quick-link-grid a small { display: block; }
+.quick-link-grid a strong { font-size: 1rem; font-weight: 650; }
+.quick-link-grid a small { margin-top: .15rem; font-size: .875rem; color: #617064; }
+.quick-link-grid a svg { flex: 0 0 auto; color: #617064; }
+.quick-links-toggle { display: flex; align-items: center; justify-content: center; gap: .4rem; min-height: 40px; margin: .5rem auto 0; padding: .4rem .9rem; border-radius: 8px; color: var(--primary); font-size: .875rem; cursor: pointer; }
+.quick-links-toggle:hover { background: #edf1e7; }
+.quick-links-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+.quick-access-compact [data-slot="collapsible-content"] .quick-link-grid { padding-top: .65rem; }
+.quick-link-grid a:focus-visible, .quick-links-toggle:focus-visible, .quick-access-compact .search-shell:focus-within { outline: 2px solid #64806f; outline-offset: 3px; }
+@media (max-width: 640px) {
+  .quick-access-compact { padding: 1rem; }
+  .quick-access-compact .section-heading { align-items: stretch; }
+  .quick-link-grid { grid-template-columns: 1fr; }
+  .quick-link-grid a { padding: .65rem .8rem; }
+}
+.knowledge-page { width: min(1180px, calc(100% - 40px)); margin: 2rem auto; padding-bottom: 4rem; }
+.classic-search { margin: 1rem 0 1.5rem; padding: 1rem 1.2rem; border: 1px solid var(--border); border-radius: 12px; background: var(--card); }
+.classic-search > label { display: block; margin-bottom: .6rem; font-weight: 650; font-size: 1rem; }
+.classic-search-field { display: flex; align-items: center; gap: .65rem; }
+.classic-search-field > svg { flex: 0 0 auto; color: #56714e; }
+.classic-search-field input { min-width: 0; height: 44px; font-size: 1rem; background: #fffef9; }
+.classic-search-field button { min-height: 44px; }
+.classic-search > p, .classic-search > output { display: block; margin-top: .6rem; font-size: .875rem; color: #617064; }
+.classic-search > output:empty { display: none; }
+.classic-search-results { list-style: none; padding: 0; margin: 0; max-height: 340px; overflow: auto; }
+.classic-search-results li { border-top: 1px solid var(--border); margin-top: .6rem; }
+.classic-search-results a { display: block; padding: .8rem .3rem; border-radius: 6px; }
+.classic-search-results a:hover { background: #edf1e7; }
+.classic-search-results a:focus-visible { outline-offset: -3px; }
+.classic-search-results strong { display: block; color: var(--primary); font-size: .875rem; margin-bottom: .35rem; }
+.classic-search-results span { font-size: 1rem; line-height: 1.8; overflow-wrap: anywhere; }
+.knowledge-page mark { color: #493813; background: #f4df8f; border-radius: 2px; }
+.classic-chapter mark { scroll-margin: 5rem; }
+.classic-chapter mark:focus { outline: 2px solid #95782e; outline-offset: 3px; }
+.page-back { display: inline-flex; align-items: center; gap: .5rem; color: var(--primary); min-height: 44px; font-size: .95rem; }
+.page-back:hover { text-decoration: underline; }
+.knowledge-heading { margin: 2rem 0; }
+.knowledge-heading h1 { font-family: "Noto Serif SC", "Songti SC", "SimSun", serif; font-size: 2.7rem; margin: .7rem 0; font-weight: 600; letter-spacing: .1em; }
+.knowledge-heading > p:last-child { color: #58695e; font-size: 1rem; }
+.book-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.book-card { display: flex; padding: 2rem; gap: 1.6rem; background: var(--card); border: 1px solid var(--border); border-radius: 16px; }
+.book-spine { writing-mode: vertical-rl; border-right: 2px solid #688568; padding-right: .8rem; font: 2.8rem "SimSun", serif; color: #32523e; }
+.book-card span { color: #627468; font-size: .875rem; }
+.book-card h2 { font-size: 1.65rem; font-family: "SimSun", serif; margin: .7rem 0; font-weight: 650; }
+.book-card p { font-size: 1rem; line-height: 1.8; color: #617064; }
+.book-card a { display: inline-flex; align-items: center; gap: .7rem; margin-top: 1rem; min-height: 44px; font-weight: 650; color: var(--primary); }
+.library-editorial { display: flex; align-items: flex-start; gap: 1rem; margin: 2rem 0; padding: 1rem; border-top: 1px solid var(--border); }
+.library-editorial svg { flex: 0 0 auto; margin-top: .3rem; }
+.library-editorial p { font-size: .875rem; color: #647168; line-height: 1.9; margin: 0; max-width: 800px; }
+.reading-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .8rem; margin-bottom: 1.5rem; font-size: .875rem; color: #5b6c60; }
+.reading-toolbar label { display: flex; align-items: center; gap: .6rem; min-height: 44px; cursor: pointer; }
+.reader-layout { display: grid; grid-template-columns: 195px minmax(0, 1fr); gap: 2rem; align-items: start; }
+.reader-toc { position: sticky; top: 1rem; max-height: calc(100vh - 2rem); overflow: auto; display: grid; gap: .35rem; }
+.reader-toc h2 { font-size: .95rem; margin-bottom: .7rem; font-weight: 650; }
+.reader-toc a, .reader-toc button { display: flex; align-items: center; gap: .6rem; padding: .75rem; border-radius: 8px; border: 1px solid transparent; font-size: .875rem; text-align: left; cursor: pointer; }
+.reader-toc a:hover, .reader-toc button:hover { background: #e5eadd; }
+.reader-toc a[aria-current] { color: #fff; background: var(--primary); }
+.reader-toc strong { font-weight: 600; }
+.reader-paper { min-width: 0; background: #fffef9; border: 1px solid var(--border); border-radius: 16px; padding: clamp(1.3rem, 4vw, 3rem); }
+.classic-chapter { padding-bottom: 2rem; margin-bottom: 2rem; border-bottom: 1px solid #e7e5dc; scroll-margin-top: 2rem; }
+.classic-chapter h2 { font-size: 1.1rem; font-weight: 650; margin-bottom: 1.4rem; color: #56714e; }
+.classic-chapter p { font-family: "Noto Serif SC", "Songti SC", "SimSun", serif; font-size: 1.25rem; line-height: 2.6; letter-spacing: .035em; overflow-wrap: anywhere; text-align: start; }
+.classic-chapter ruby { ruby-position: over; }
+.classic-chapter rt { font-family: var(--font-sans); font-size: .7em; font-weight: 400; letter-spacing: 0; color: #486349; }
+.classic-note { font-family: var(--font-sans); color: #806344; font-size: .875rem; letter-spacing: 0; }
+.reader-pagination { display: flex; justify-content: space-between; gap: 1rem; }
+.reader-pagination a { display: inline-flex; align-items: center; gap: .6rem; min-height: 44px; font-size: 1rem; color: var(--primary); }
+.classic-source { margin-top: 2rem; padding-top: 1.3rem; border-top: 1px solid var(--border); font-size: .875rem; color: #667169; line-height: 1.9; }
+.classic-source h2 { font-size: 1rem; font-weight: 650; }
+.classic-source p { margin-top: .7rem; }
+.classic-source a { text-decoration: underline; text-underline-offset: 3px; }
+.release-page { margin-top: 2rem; padding-bottom: 4rem; }
+.release-page > .section-kicker { margin-top: 2rem; }
+.release-page h1 { font-size: 2rem; font-weight: 650; margin: .8rem 0 1.5rem; }
+.release-page .release-entry { margin-bottom: 1rem; }
+.release-page .release-entry h2 { font-size: 1.1rem; }
+a:focus-visible { outline: 3px solid var(--ring); outline-offset: 4px; }
+@media (max-width: 800px) {
+  .public-modules { width: calc(100% - 24px); grid-template-columns: 1fr; }
+  .intro.intro-compact { width: calc(100% - 36px); padding: 1.6rem 0; }
+  .book-grid { grid-template-columns: 1fr; }
+  .book-card { padding: 1.4rem; }
+  .reader-layout { grid-template-columns: 1fr; gap: 1rem; }
+  .reader-toc { position: static; max-height: none; display: flex; flex-wrap: wrap; gap: .4rem; }
+  .reader-toc h2 { width: 100%; }
+  .reader-toc a, .reader-toc button { border-color: var(--border); flex-wrap: wrap; }
+  .knowledge-page { width: calc(100% - 24px); margin-top: 1rem; }
+  .classic-chapter p { font-size: 1.15rem; }
+}
 .report-heading, .report-toolbar, .report-part-heading, .report-entry-actions, .report-status { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
 .report-heading { justify-content: space-between; }
 .report-heading h3 { margin: .5rem 0; font-size: 1.6rem; font-weight: 700; }

@@ -13,11 +13,10 @@ import {
   ArrowUpRight,
   ArrowLeft,
   BookOpen,
-  BriefcaseBusiness,
+  ChevronDown,
   Check,
   Clock3,
   FileText,
-  Globe2,
   Leaf,
   ListChecks,
   LoaderCircle,
@@ -33,6 +32,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 import {
   NativeSelect,
   NativeSelectOption,
@@ -64,39 +64,17 @@ import type {
 import { getSupabaseBrowserClient } from '@/lib/supabase';
 import { DailyReportModule } from '@/components/daily-report';
 import { releases } from '@/lib/releases';
+import { KnowledgeLibrary } from '@/components/knowledge-library';
+import { quickLinks, searchQuickLinks } from '@/lib/quick-links';
 
-const linkGroups = [
-  {
-    title: '工作工具',
-    icon: BriefcaseBusiness,
-    tone: 'clay',
-    links: [
-      { name: 'GitHub', note: '代码与项目', href: 'https://github.com' },
-      { name: 'Supabase', note: '数据与认证', href: 'https://supabase.com' },
-      { name: 'Notion', note: '知识与协作', href: 'https://notion.so' },
-    ],
-  },
-  {
-    title: '学习资源',
-    icon: BookOpen,
-    tone: 'moss',
-    links: [
-      { name: 'Coursera', note: '系统课程', href: 'https://coursera.org' },
-      { name: 'arXiv', note: '论文检索', href: 'https://arxiv.org' },
-      { name: 'MDN', note: 'Web 文档', href: 'https://developer.mozilla.org' },
-    ],
-  },
-  {
-    title: '常看网站',
-    icon: Globe2,
-    tone: 'sky',
-    links: [
-      { name: '少数派', note: '效率与生活', href: 'https://sspai.com' },
-      { name: '知乎', note: '问题与讨论', href: 'https://zhihu.com' },
-      { name: 'Bilibili', note: '视频与课程', href: 'https://bilibili.com' },
-    ],
-  },
-];
+function QuickLinkGrid({ links }: { links: typeof quickLinks }) {
+  return <div className="quick-link-grid">
+    {links.map((link) => <a href={link.href} target="_blank" rel="noreferrer" key={link.name}>
+      <span><strong>{link.name}</strong><small>{link.note}</small></span>
+      <ArrowUpRight size={17} />
+    </a>)}
+  </div>;
+}
 
 const typeMeta: Record<ItemType, { label: string; icon: typeof ListChecks }> = {
   task: { label: '任务', icon: ListChecks },
@@ -142,6 +120,7 @@ export function Workbench() {
   const supabase = useMemo(() => getSupabaseBrowserClient(), []);
   const searchRef = useRef<HTMLInputElement>(null);
   const [search, setSearch] = useState('');
+  const [moreLinksOpen, setMoreLinksOpen] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
   const [authReady, setAuthReady] = useState(false);
   const [items, setItems] = useState<PrivateItem[]>([]);
@@ -155,21 +134,23 @@ export function Workbench() {
   const [filter, setFilter] = useState<'all' | ItemType>('all');
   const [saving, setSaving] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
+  const [publicPage, setPublicPage] = useState<'home' | 'knowledge' | 'changelog'>('home');
+  useEffect(() => {
+    const sync = () => {
+      const hash = window.location.hash;
+      setPublicPage(hash.startsWith('#knowledge') ? 'knowledge' : hash === '#changelog' ? 'changelog' : 'home');
+      if (hash.startsWith('#knowledge') || hash === '#changelog') {
+        setReportOpen(false);
+        window.scrollTo(0, 0);
+      }
+    };
+    sync(); window.addEventListener('hashchange', sync);
+    return () => window.removeEventListener('hashchange', sync);
+  }, []);
   const reportDirty = useRef(false);
   const onReportDirtyChange = useCallback((dirty: boolean) => { reportDirty.current = dirty; }, []);
 
-  const visibleGroups = useMemo(() => {
-    const keyword = search.trim().toLocaleLowerCase();
-    if (!keyword) return linkGroups;
-    return linkGroups
-      .map((group) => ({
-        ...group,
-        links: group.links.filter((link) =>
-          `${link.name} ${link.note}`.toLocaleLowerCase().includes(keyword),
-        ),
-      }))
-      .filter((group) => group.links.length > 0);
-  }, [search]);
+  const visibleLinks = useMemo(() => searchQuickLinks(search), [search]);
 
   const fetchItems = useCallback(async () => {
     if (!supabase || !session) return;
@@ -308,7 +289,7 @@ export function Workbench() {
 
   return (
     <>
-    <main className="site-shell" hidden={reportOpen && Boolean(session)}>
+    <main className="site-shell" hidden={publicPage !== 'home' || (reportOpen && Boolean(session))}>
       <header className="topbar">
         <a className="brand" href="#top" aria-label="返回首页">
           <span className="brand-mark"><Leaf size={17} strokeWidth={2.2} /></span>
@@ -316,7 +297,7 @@ export function Workbench() {
         </a>
         <nav className="topnav" aria-label="主导航">
           <a className="is-active" href="#links">导航</a>
-          <a href="#now">现在</a>
+          <a href="#knowledge">知识库</a>
           <a href="#about">关于</a>
           <a href="#changelog">升版日志</a>
           {session && <a href="#private">私密空间</a>}
@@ -332,26 +313,17 @@ export function Workbench() {
         )}
       </header>
 
-      <section className="intro" id="top">
-        <div>
-          <p className="eyebrow"><span /> PERSONAL WORKSPACE · 2026</p>
-          <h1>把常用入口与<br />正在发生的事，放在一起。</h1>
-          <p className="intro-copy">
-            这是一个安静、好用的个人工作台：快速抵达常用工具，记录学习与项目进展，
-            也给尚未完成的想法留一块生长的地方。
-          </p>
-        </div>
-        <aside className="now-card" id="now">
-          <div className="now-card-label"><Clock3 size={15} /> 现在 / NOW</div>
-          <p>正在搭建个人知识系统，整理 CFD、编程与长期学习记录。</p>
-          <span>更新于 2026.09</span>
-        </aside>
+      <section className="intro intro-compact" id="top">
+        <h1>且将新火试新茶</h1>
       </section>
 
-      <section className="link-section" id="links">
+      <section className="public-modules public-modules-single" aria-label="知识库入口">
+        <a className="public-module-card" href="#knowledge"><span className="public-module-icon"><BookOpen /></span><span><strong>知识库</strong><small>道德经 · 齐物论 · 原文与注音简释</small></span><ArrowUpRight /></a>
+      </section>
+
+      <section className="link-section quick-access-compact" id="links">
         <div className="section-heading">
           <div>
-            <p className="section-kicker">QUICK ACCESS</p>
             <h2>常用入口</h2>
           </div>
           <label className="search-shell">
@@ -360,7 +332,7 @@ export function Workbench() {
             <input
               ref={searchRef}
               aria-label="搜索常用网站"
-              placeholder="搜索网站…"
+              placeholder="搜索全部网站…"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
             />
@@ -368,34 +340,24 @@ export function Workbench() {
           </label>
         </div>
 
-        {visibleGroups.length ? (
-          <div className="link-grid">
-            {visibleGroups.map((group) => {
-              const Icon = group.icon;
-              return (
-                <article className={`link-group ${group.tone}`} key={group.title}>
-                  <div className="group-title">
-                    <span><Icon size={17} /></span>
-                    <h3>{group.title}</h3>
-                  </div>
-                  <div className="group-links">
-                    {group.links.map((link) => (
-                      <a href={link.href} target="_blank" rel="noreferrer" key={link.name}>
-                        <span>
-                          <strong>{link.name}</strong>
-                          <small>{link.note}</small>
-                        </span>
-                        <ArrowUpRight size={17} />
-                      </a>
-                    ))}
-                  </div>
-                </article>
-              );
-            })}
-          </div>
+        {visibleLinks.length ? (
+          <QuickLinkGrid links={visibleLinks} />
         ) : (
           <div className="search-empty">没有找到匹配的入口，换个关键词试试。</div>
         )}
+        {!search.trim() && <Collapsible open={moreLinksOpen} onOpenChange={setMoreLinksOpen}>
+          <CollapsibleTrigger className="quick-links-toggle">
+            {moreLinksOpen ? '收起' : '更多'}
+            <ChevronDown size={16} aria-hidden="true" />
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <QuickLinkGrid links={quickLinks.filter((link) => !link.featured)} />
+          </CollapsibleContent>
+        </Collapsible>}
+      </section>
+
+      <section className="public-modules public-modules-single" aria-label="升版日志入口">
+        <a className="public-module-card" href="#changelog"><span className="public-module-icon"><Clock3 /></span><span><strong>升版记录日志</strong><small>当前 v{releases[0].version} · 查看历次更新</small></span><ArrowUpRight /></a>
       </section>
 
       <PrivateDesk
@@ -424,17 +386,6 @@ export function Workbench() {
           公开区域帮助访客了解我在做什么；私密区域只为日常工作服务。
           这里不会保存密码、API 密钥或其他应交给专业密码管理器的机密。
         </p>
-      </section>
-
-      <section className="release-log" id="changelog" aria-labelledby="release-log-title">
-        <p className="section-kicker">CHANGELOG</p>
-        <h2 id="release-log-title">升版记录日志</h2>
-        {releases.map((release) => <article className="release-entry" key={release.version}>
-          <div className="release-meta"><strong>v{release.version}</strong><time dateTime={release.date}>{release.date}</time></div>
-          <h3>{release.title}</h3>
-          <ul>{release.changes.map((change) => <li key={change}>{change}</li>)}</ul>
-          <p>{release.note}</p>
-        </article>)}
       </section>
 
       <footer>
@@ -475,6 +426,15 @@ export function Workbench() {
         </AlertDialogContent>
       </AlertDialog>
     </main>
+    {publicPage === 'knowledge' && <KnowledgeLibrary />}
+    {publicPage === 'changelog' && <main className="release-log release-page" aria-labelledby="release-log-title">
+      <a className="page-back" href="#top"><ArrowLeft size={17} />返回工作台</a>
+      <p className="section-kicker">CHANGELOG</p><h1 id="release-log-title">升版记录日志</h1>
+      {releases.map((release) => <article className="release-entry" key={release.version}>
+        <div className="release-meta"><strong>v{release.version}</strong><time dateTime={release.date}>{release.date}</time></div>
+        <h2>{release.title}</h2><ul>{release.changes.map((change) => <li key={change}>{change}</li>)}</ul><p>{release.note}</p>
+      </article>)}
+    </main>}
     {session && <div hidden={!reportOpen}>
       <main className="report-page">
         <Button variant="outline" onClick={() => {
