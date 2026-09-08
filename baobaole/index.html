@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>爆爆乐 - 解压小游戏</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Arial', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .container { text-align: center; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
+        h1 { color:#333; margin-bottom:20px; font-size:2.5em; }
+        .info { display:flex; justify-content:space-around; margin-bottom:20px; font-size:1.2em; }
+        .score,.moves { color:#667eea; font-weight:bold; }
+        .game-board { display:grid; grid-template-columns:repeat(6,60px); gap:8px; margin:20px auto; background:#f0f0f0; padding:15px; border-radius:10px; width:fit-content; }
+        .block { width:60px; height:60px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; font-size:24px; transition:all .2s; box-shadow:0 4px 8px rgba(0,0,0,.2); }
+        .block:hover { transform:scale(1.05); box-shadow:0 6px 12px rgba(0,0,0,.3); }
+        .block:active { transform:scale(.95); }
+        .block.selected { transform:scale(1.1); box-shadow:0 0 20px rgba(0,0,0,.5); border:3px solid #fff; }
+        .controls { margin-top:20px; }
+        button { padding:12px 30px; margin:10px; font-size:1.1em; border:none; border-radius:8px; cursor:pointer; font-weight:bold; transition:all .3s; }
+        .start-btn { background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:white; }
+        .start-btn:hover { transform:translateY(-2px); box-shadow:0 10px 20px rgba(102,126,234,.4); }
+        .reset-btn { background:#ff6b6b; color:white; }
+        .reset-btn:hover { background:#ff5252; transform:translateY(-2px); }
+        .color-1 { background:linear-gradient(135deg,#FF6B6B 0%,#FF5252 100%); color:white; }
+        .color-2 { background:linear-gradient(135deg,#4ECDC4 0%,#3DB8AA 100%); color:white; }
+        .color-3 { background:linear-gradient(135deg,#FFE66D 0%,#FFC93C 100%); color:#333; }
+        .color-4 { background:linear-gradient(135deg,#95E1D3 0%,#6FD8C9 100%); color:white; }
+        .color-5 { background:linear-gradient(135deg,#C7CEEA 0%,#B2A4DE 100%); color:white; }
+        .color-6 { background:linear-gradient(135deg,#FF9A9E 0%,#FAD0C4 100%); color:white; }
+        .combo { position:fixed; font-size:3em; font-weight:bold; color:#FFD700; pointer-events:none; animation:popUp 1s ease-out forwards; text-shadow:2px 2px 4px rgba(0,0,0,.5); }
+        @keyframes popUp { 0% {opacity:1;transform:translateY(0) scale(1)} 100% {opacity:0;transform:translateY(-100px) scale(.5)} }
+        .game-over { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:white; padding:40px; border-radius:20px; box-shadow:0 20px 60px rgba(0,0,0,.5); text-align:center; z-index:1000; display:none; }
+        .game-over.show { display:block; animation:slideIn .5s ease-out; }
+        @keyframes slideIn { 0% {transform:translate(-50%,-50%) scale(.5);opacity:0} 100% {transform:translate(-50%,-50%) scale(1);opacity:1} }
+        .game-over h2 { font-size:2.5em; color:#667eea; margin-bottom:20px; }
+        .game-over p { font-size:1.5em; color:#333; margin:10px 0; }
+    </style>
+</head>
+<body>
+<div class="container"><h1>🎮 爆爆乐</h1><div class="info"><div>分数: <span class="score">0</span></div><div>步数: <span class="moves">0</span></div></div><div class="game-board" id="gameBoard"></div><div class="controls"><button class="start-btn" id="startBtn">开始游戏</button><button class="reset-btn" id="resetBtn">重新开始</button></div></div>
+<div class="game-over" id="gameOver"><h2>游戏结束！</h2><p>最终分数: <span id="finalScore">0</span></p><p>总步数: <span id="finalMoves">0</span></p><button class="start-btn" onclick="location.reload()">再来一局</button></div>
+<script>
+const COLORS=6,GRID_SIZE=6;let grid=[],score=0,moves=0,gameStarted=false,selectedBlocks=new Set();
+const gameBoard=document.getElementById('gameBoard'),scoreDisplay=document.querySelector('.score'),movesDisplay=document.querySelector('.moves'),startBtn=document.getElementById('startBtn'),resetBtn=document.getElementById('resetBtn'),gameOverModal=document.getElementById('gameOver');
+function initGame(){grid=[];for(let i=0;i<GRID_SIZE*GRID_SIZE;i++)grid.push(Math.floor(Math.random()*COLORS)+1);score=0;moves=0;selectedBlocks.clear();gameStarted=true;gameOverModal.classList.remove('show');renderBoard();updateDisplay()}
+function renderBoard(){gameBoard.innerHTML='';grid.forEach((color,index)=>{if(color===0)return;const block=document.createElement('button');block.className=`block color-${color}`;block.textContent=color;block.addEventListener('click',()=>selectBlock(index));gameBoard.appendChild(block)})}
+function selectBlock(index){if(!gameStarted||grid[index]===0)return;const color=grid[index],connected=findConnected(index,color);if(connected.length>1){connected.forEach(i=>grid[i]=0);score+=connected.length*10;moves++;showCombo(connected.length);dropBlocks();fillGaps();setTimeout(()=>{if(checkGameOver())endGame();else renderBoard()},300)}updateDisplay()}
+function findConnected(index,color,visited=new Set()){if(visited.has(index)||grid[index]!==color)return[];visited.add(index);const row=Math.floor(index/GRID_SIZE),col=index%GRID_SIZE,neighbors=[];if(row>0)neighbors.push(index-GRID_SIZE);if(row<GRID_SIZE-1)neighbors.push(index+GRID_SIZE);if(col>0)neighbors.push(index-1);if(col<GRID_SIZE-1)neighbors.push(index+1);let connected=[index];neighbors.forEach(n=>connected=connected.concat(findConnected(n,color,visited)));return connected}
+function dropBlocks(){for(let col=0;col<GRID_SIZE;col++){let writePos=GRID_SIZE*GRID_SIZE-GRID_SIZE+col;for(let row=GRID_SIZE-1;row>=0;row--){const pos=row*GRID_SIZE+col;if(grid[pos]!==0){grid[writePos]=grid[pos];if(writePos!==pos)grid[pos]=0;writePos-=GRID_SIZE}}}}
+function fillGaps(){for(let i=0;i<grid.length;i++)if(grid[i]===0)grid[i]=Math.floor(Math.random()*COLORS)+1}
+function checkGameOver(){for(let i=0;i<grid.length;i++){if(grid[i]===0)continue;const connected=findConnected(i,grid[i]);if(connected.length>1)return false}return true}
+function endGame(){gameStarted=false;document.getElementById('finalScore').textContent=score;document.getElementById('finalMoves').textContent=moves;gameOverModal.classList.add('show')}
+function showCombo(count){const combo=document.createElement('div');combo.className='combo';combo.textContent=`+${count*10}`;combo.style.left=Math.random()*window.innerWidth+'px';combo.style.top=Math.random()*window.innerHeight+'px';document.body.appendChild(combo);setTimeout(()=>combo.remove(),1000)}
+function updateDisplay(){scoreDisplay.textContent=score;movesDisplay.textContent=moves}
+startBtn.addEventListener('click',initGame);resetBtn.addEventListener('click',initGame);console.log('游戏已加载完成！点击开始游戏按钮开始玩吧！');
+</script></body></html>
