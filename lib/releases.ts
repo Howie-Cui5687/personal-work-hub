@@ -1,5 +1,16 @@
 // Public release notes only; never include private report content here.
 export const releases = [{
+  version: '0.5',
+  date: '2026-09-14',
+  title: '首页展示修正与功能入口扩展',
+  changes: [
+    '顶部动画改为整幅展示，调整标题、画面与暂停按钮的位置，适配手机布局。',
+    '功能区与常用入口各自采用两列排列，窄屏自动切换为单列。',
+    '升版记录仅保留顶部导航入口，历史记录保持不变。',
+    '新增端吸泵开发流程、离心泵设计经验、持续补充入口，预留内容页面。',
+  ],
+  note: '新增入口内容待补充；原有知识库及私密空间功能保持不变。',
+}, {
   version: '0.4',
   date: '2026-09-14',
   title: '首页顶部新增鹈鹕骑车动画',

@@ -15,7 +15,6 @@ import {
   BookOpen,
   ChevronDown,
   Check,
-  Clock3,
   FileText,
   Leaf,
   ListChecks,
@@ -66,6 +65,13 @@ import { DailyReportModule } from '@/components/daily-report';
 import { releases } from '@/lib/releases';
 import { KnowledgeLibrary } from '@/components/knowledge-library';
 import { quickLinks, searchQuickLinks } from '@/lib/quick-links';
+
+const plannedModules = [
+  { id: 'pump-development', title: '端吸泵开发流程', icon: ListChecks },
+  { id: 'pump-design-experience', title: '离心泵设计经验', icon: FileText },
+  { id: 'continuing-additions', title: '持续补充入口', icon: Plus },
+] as const;
+type PublicPage = 'home' | 'knowledge' | 'changelog' | typeof plannedModules[number]['id'];
 
 function QuickLinkGrid({ links }: { links: typeof quickLinks }) {
   return <div className="quick-link-grid">
@@ -134,12 +140,14 @@ export function Workbench() {
   const [filter, setFilter] = useState<'all' | ItemType>('all');
   const [saving, setSaving] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
-  const [publicPage, setPublicPage] = useState<'home' | 'knowledge' | 'changelog'>('home');
+  const [publicPage, setPublicPage] = useState<PublicPage>('home');
+  const selectedModule = plannedModules.find((module) => module.id === publicPage);
   useEffect(() => {
     const sync = () => {
       const hash = window.location.hash;
-      setPublicPage(hash.startsWith('#knowledge') ? 'knowledge' : hash === '#changelog' ? 'changelog' : 'home');
-      if (hash.startsWith('#knowledge') || hash === '#changelog') {
+      const nextPage: PublicPage = hash.startsWith('#knowledge') ? 'knowledge' : hash === '#changelog' ? 'changelog' : plannedModules.find((module) => hash === `#${module.id}`)?.id ?? 'home';
+      setPublicPage(nextPage);
+      if (nextPage !== 'home') {
         setReportOpen(false);
         window.scrollTo(0, 0);
       }
@@ -299,7 +307,7 @@ export function Workbench() {
           <a className="is-active" href="#links">导航</a>
           <a href="#knowledge">知识库</a>
           <a href="#about">关于</a>
-          <a href="#changelog">升版日志</a>
+          <a href="#changelog">升版记录</a>
           {session && <a href="#private">私密空间</a>}
         </nav>
         {session ? (
@@ -317,15 +325,26 @@ export function Workbench() {
         <h1>且将新火试新茶</h1>
         {publicPage === 'home' && !(reportOpen && session) && <iframe
           className="pelican-hero-frame"
-          src="./animations/pelican-bicycle.html"
+          src="./animations/pelican-bicycle.html?layout=2"
           title="鹈鹕的兜风日：骑车动画，可暂停或继续播放"
           sandbox="allow-scripts"
           referrerPolicy="no-referrer"
         />}
       </section>
 
-      <section className="public-modules public-modules-single" aria-label="知识库入口">
+      <section className="function-section" id="functions" aria-labelledby="function-area-title">
+        <h2 id="function-area-title">功能区</h2>
+        <div className="public-modules function-grid">
         <a className="public-module-card" href="#knowledge"><span className="public-module-icon"><BookOpen /></span><span><strong>知识库</strong><small>道德经 · 齐物论 · 原文与注音简释</small></span><ArrowUpRight /></a>
+        {plannedModules.map((module) => {
+          const Icon = module.icon;
+          return <a className="public-module-card" href={`#${module.id}`} key={module.id}>
+            <span className="public-module-icon"><Icon /></span>
+            <span><strong>{module.title}</strong><small>内容待补充</small></span>
+            <ArrowUpRight />
+          </a>;
+        })}
+        </div>
       </section>
 
       <section className="link-section quick-access-compact" id="links">
@@ -363,10 +382,6 @@ export function Workbench() {
         </Collapsible>}
       </section>
 
-      <section className="public-modules public-modules-single" aria-label="升版日志入口">
-        <a className="public-module-card" href="#changelog"><span className="public-module-icon"><Clock3 /></span><span><strong>升版记录日志</strong><small>当前 v{releases[0].version} · 查看历次更新</small></span><ArrowUpRight /></a>
-      </section>
-
       <PrivateDesk
         configured={Boolean(supabase)}
         authReady={authReady}
@@ -396,7 +411,7 @@ export function Workbench() {
       </section>
 
       <footer>
-        <span>© 2026 我的工作台 · <a href="#changelog">v{releases[0].version} · 升版日志</a></span>
+        <span>© 2026 我的工作台 · v{releases[0].version}</span>
         <span className="footer-security"><ShieldCheck size={14} /> Supabase Auth + RLS</span>
       </footer>
 
@@ -434,6 +449,13 @@ export function Workbench() {
       </AlertDialog>
     </main>
     {publicPage === 'knowledge' && <KnowledgeLibrary />}
+    {selectedModule && <main className="module-placeholder-page" aria-labelledby="module-placeholder-title">
+      <a className="page-back" href="#functions"><ArrowLeft size={17} />返回功能区</a>
+      <section className="module-placeholder-card">
+        <h1 id="module-placeholder-title">{selectedModule.title}</h1>
+        <p>内容待补充</p>
+      </section>
+    </main>}
     {publicPage === 'changelog' && <main className="release-log release-page" aria-labelledby="release-log-title">
       <a className="page-back" href="#top"><ArrowLeft size={17} />返回工作台</a>
       <p className="section-kicker">CHANGELOG</p><h1 id="release-log-title">升版记录日志</h1>
