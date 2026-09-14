@@ -1,5 +1,14 @@
 // Public release notes only; never include private report content here.
 export const releases = [{
+  version: '0.4',
+  date: '2026-09-14',
+  title: '首页顶部新增鹈鹕骑车动画',
+  changes: [
+    '顶部展示鹈鹕骑车动画，保留“且将新火试新茶”，适配手机与电脑布局。',
+    '支持暂停与继续播放，并尊重系统减少动态效果设置。',
+  ],
+  note: '知识库、常用入口及私密空间功能保持不变。',
+}, {
   version: '0.3',
   date: '2026-09-08',
   title: '公开知识库、全文搜索与首页精简',

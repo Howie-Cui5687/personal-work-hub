@@ -313,8 +313,15 @@ export function Workbench() {
         )}
       </header>
 
-      <section className="intro intro-compact" id="top">
+      <section className="pelican-hero" id="top" aria-label="首页动画展示">
         <h1>且将新火试新茶</h1>
+        {publicPage === 'home' && !(reportOpen && session) && <iframe
+          className="pelican-hero-frame"
+          src="./animations/pelican-bicycle.html"
+          title="鹈鹕的兜风日：骑车动画，可暂停或继续播放"
+          sandbox="allow-scripts"
+          referrerPolicy="no-referrer"
+        />}
       </section>
 
       <section className="public-modules public-modules-single" aria-label="知识库入口">

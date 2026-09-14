@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>鹈鹕的兜风日 · Pelican on Wheels</title>
+<style>
+  *{box-sizing:border-box}body{margin:0;min-height:100svh;display:grid;place-items:center;background:#eeeade;color:#253f3b;font-family:system-ui,"Microsoft YaHei",sans-serif;padding:24px}
+  main{width:min(100%,1000px);background:#faf7ed;border-radius:28px;overflow:hidden;box-shadow:0 20px 70px #344b3612}
+  header{padding:36px 44px 0;display:flex;align-items:center;justify-content:space-between;gap:20px}.eyebrow{font-size:11px;letter-spacing:3px;color:#748578;margin:0 0 10px}h1{font-size:clamp(22px,4vw,34px);font-weight:650;letter-spacing:2px;margin:0}header span{font-size:28px}
+  svg{display:block;width:100%;height:auto}footer{padding:0 44px 28px;display:flex;align-items:center;justify-content:space-between;gap:18px;font-size:12px;color:#708176}button{border:1px solid #ccd4c7;border-radius:30px;padding:10px 18px;background:transparent;color:#36574d;font:inherit;cursor:pointer}button:hover{background:#e9edde}button:focus-visible{outline:3px solid #d89b4c;outline-offset:3px}
+  @media(max-width:500px){body{padding:12px}header{padding:26px 24px 0}footer{padding:0 24px 24px}footer span{max-width:180px;line-height:1.7}}
+
+  /* Embedded presentation: retain the supplied artwork and pause control. */
+  html,body{height:100%;min-height:0;padding:0;background:transparent;overflow:hidden}
+  main{width:100%;height:100%;display:grid;grid-template-rows:minmax(0,1fr) auto;background:transparent;border-radius:0;box-shadow:none}
+  header,footer span,svg>text{display:none}
+  svg{width:100%;height:100%;min-height:0}
+  footer{padding:0 16px 12px;justify-content:flex-end;font-size:14px}
+  button{min-height:40px;padding:8px 16px;background:#faf7ed}
+</style>
+</head>
+<body>
+<main>
+  <header><div><p class="eyebrow">A LITTLE RIDE, A LOT OF JOY</p><h1>鹈鹕的兜风日</h1></div><span aria-hidden="true">↗</span></header>
+  <svg viewBox="0 0 1000 590" role="img" aria-labelledby="scene-title scene-desc">
+    <title id="scene-title">鹈鹕骑自行车的循环动画</title>
+    <desc id="scene-desc">一只戴着绿色小帽、系着橙色围巾的鹈鹕骑着绿色自行车。双脚交替踩踏，车轮转动，身体轻轻起伏，路旁草地与云朵向后移动。</desc>
+    <defs>
+      <pattern id="hillPattern" width="1000" height="230" patternUnits="userSpaceOnUse"><path d="M0 160Q130 60 260 145T540 140T800 155T1060 145V230H0Z" fill="#e4e9d6"/><path d="M0 200Q170 95 340 185T680 185T1020 190V230H0Z" fill="#d5dfc5"/></pattern>
+      <pattern id="groundPattern" width="300" height="95" patternUnits="userSpaceOnUse"><path d="M20 57h26M174 70h13M260 53h20" stroke="#bcc6ac" stroke-width="3" stroke-linecap="round"/><path d="M95 23l-5-10m5 10 5-14m-5 14 12-6" stroke="#a2b794" fill="none" stroke-width="3" stroke-linecap="round"/></pattern>
+      <g id="cloud" fill="#fffdf6"><path d="M-58 0a22 22 0 0 1 20-28 31 31 0 0 1 59-7A25 25 0 0 1 51-6Q70-4 68 9H-63Q-72 2-58 0Z"/></g>
+      <g id="wheel" fill="none"><circle r="77" stroke="#304e48" stroke-width="12"/><circle r="68" stroke="#f7f6e7" stroke-width="4"/><g stroke="#78938a" stroke-width="2.5"><path d="M-66 0H66M0-66V66M-46.7-46.7l93.4 93.4M-46.7 46.7l93.4-93.4"/></g><circle r="9" fill="#faf7ed" stroke="#304e48" stroke-width="4"/><path d="M-22-68q18-7 36-2" stroke="#dfa04a" stroke-width="5" stroke-linecap="round"/></g>
+    </defs>
+    <circle cx="795" cy="100" r="41" fill="#f0ca7b"/>
+    <g id="clouds"><use href="#cloud" x="210" y="118"/><use href="#cloud" x="600" y="63" transform="translate(150 22) scale(.75)"/><use href="#cloud" x="1210" y="118"/><use href="#cloud" x="1933.333" y="63" transform="translate(150 22) scale(.75)"/></g>
+    <rect id="hills" x="0" y="235" width="1000" height="230" fill="url(#hillPattern)"/>
+    <path d="M0 464H1000V590H0Z" fill="#e8e7d6"/>
+    <path d="M0 465H1000" stroke="#b1c1a3" stroke-width="2"/>
+    <rect id="ground" y="479" width="1000" height="95" fill="url(#groundPattern)"/>
+    <ellipse id="shadow" cx="505" cy="478" rx="222" ry="13" fill="#60785e" opacity=".12"/>
+    <g stroke-linecap="round" stroke-linejoin="round">
+      <g id="rearWheel" transform="translate(351 392)"><use href="#wheel"/></g>
+      <g id="frontWheel" transform="translate(669 392)"><use href="#wheel"/></g>
+      <!-- The far leg is behind the bicycle frame. -->
+      <path id="farLeg" d="M470 286L490 335L500 390" fill="none" stroke="#bc7e3b" stroke-width="13"/>
+      <path id="farFoot" d="M490 392h26" stroke="#bd7d37" stroke-width="12"/>
+      <g fill="none" stroke="#398c78" stroke-width="10">
+        <path d="M351 392L437 302L493 392ZM437 302H620L493 392M620 302L669 392"/>
+        <path d="M493 392L425 282M620 302L605 260"/>
+      </g>
+      <path d="M605 260l-7-22h32q18 0 16 16" fill="none" stroke="#36574d" stroke-width="8"/>
+      <path d="M398 282h52" stroke="#344e47" stroke-width="13"/>
+      <path d="M350 382L493 376a16 16 0 0 1 0 32L350 402a10 10 0 0 1 0-20Z" fill="#e5e8d7" stroke="#719482" stroke-width="3"/>
+      <circle cx="493" cy="392" r="20" fill="#faf7ed" stroke="#36574d" stroke-width="5"/>
+      <path id="crank" d="M466 392H520" stroke="#36574d" stroke-width="6"/>
+      <g id="bird">
+        <!-- Tail, body, curved neck, and generous pelican bill. -->
+        <path d="M424 244q-44 8-75-28l40 3-17-25q45 5 68 36" fill="#fefdf4" stroke="#3c5750" stroke-width="3.5"/>
+        <path d="M392 241c-11-38 16-72 61-76 42-5 67 11 80 28 17-19 12-44 7-68-6-29 10-50 37-52 31-2 48 23 39 48-4 15-18 27-30 43-9 13-4 36-11 63-9 36-40 60-83 64-41 5-88-13-100-50Z" fill="#fffdf3" stroke="#3c5750" stroke-width="3.5"/>
+        <path d="M560 154q-2 45-22 66" fill="none" stroke="#e3e6d8" stroke-width="12"/>
+        <path d="M415 206q47-31 101 12-6 34-50 34-26-1-43-17" fill="#e7ebdc" stroke="#6b8276" stroke-width="3"/>
+        <path d="M435 216q27 13 57 6M433 228q22 11 44 7" fill="none" stroke="#b8c8b7" stroke-width="3"/>
+        <path d="M609 109L733 129Q702 178 632 151L603 126Z" fill="#edb85b" stroke="#775d37" stroke-width="3"/>
+        <path d="M608 106l135 21q6 2-3 7L608 124" fill="#f6cc74" stroke="#775d37" stroke-width="3"/>
+        <path d="M634 139q39 16 66-1" fill="none" stroke="#d59a44" stroke-width="2.5"/>
+        <circle cx="589" cy="104" r="6" fill="#2d4740"/><circle cx="591" cy="102" r="1.7" fill="white"/>
+        <path d="M581 89q7-4 14 0" stroke="#3c5750" stroke-width="3" fill="none"/>
+        <ellipse cx="594" cy="121" rx="8" ry="4" fill="#eab497" opacity=".6"/>
+        <path d="M549 79q-2-25 24-27 26-1 29 27" fill="#398c78" stroke="#31594d" stroke-width="3"/>
+        <path d="M544 80q36-6 67 0" stroke="#31594d" stroke-width="7"/>
+        <path d="M548 159q16 7 33 4l-2 14q-17 4-32-6Z" fill="#df7951"/>
+        <path id="scarf" d="M550 164q-28-15-60-3l11 8-12 10q36-6 62-5" fill="#df7951"/>
+        <path d="M512 212q36 29 93 31" fill="none" stroke="#3c5750" stroke-width="17"/>
+        <path d="M512 211q36 29 93 31" fill="none" stroke="#f5f5e9" stroke-width="11"/>
+        <path d="M600 243l17 1" stroke="#edb85b" stroke-width="11"/>
+      </g>
+      <path id="nearLeg" d="M481 280L528 328L520 392" fill="none" stroke="#e6a347" stroke-width="13"/>
+      <path id="nearFoot" d="M510 392h28" stroke="#efb552" stroke-width="12"/>
+      <path id="nearPedal" d="M509 402h26" stroke="#36574d" stroke-width="5"/>
+      <path id="farPedal" d="M464 402h26" stroke="#36574d" stroke-width="5"/>
+      <g stroke="#91ab99" stroke-width="3" opacity=".7"><path d="M285 250h-36M274 271h-54M285 292h-22"/></g>
+    </g>
+    <text x="500" y="550" text-anchor="middle" fill="#81907a" font-size="11" letter-spacing="5">慢慢骑，风景会等你。</text>
+  </svg>
+  <footer><span>今日计划：踩着微风，去看世界。</span><button id="toggle" type="button" aria-pressed="false">暂停动画 Ⅱ</button></footer>
+</main>
+<script>
+(() => {
+  'use strict';
+  const ids=['rearWheel','frontWheel','bird','nearLeg','farLeg','nearFoot','farFoot','nearPedal','farPedal','crank','clouds','hillPattern','groundPattern','scarf','shadow'];
+  const el=Object.fromEntries(ids.map(id=>[id,document.getElementById(id)]));
+  const button=document.getElementById('toggle');
+  let paused=matchMedia('(prefers-reduced-motion: reduce)').matches,time=0,last=null;
+  const set=(id,key,value)=>el[id].setAttribute(key,value);
+  function leg(side,angle,bob){
+    const x=493+29*Math.cos(angle),y=392+29*Math.sin(angle);
+    const hipX=side==='near'?480:466,hipY=278+bob;
+    // Two equal segments form a hinged leg; the ankle follows the crank.
+    const dx=x-hipX,dy=y-hipY,d=Math.hypot(dx,dy),len=85;
+    const offset=Math.sqrt(Math.max(0,len*len-d*d/4));
+    const kneeX=(hipX+x)/2+dy/d*offset,kneeY=(hipY+y)/2-dx/d*offset;
+    set(side+'Leg','d',`M${hipX} ${hipY}L${kneeX} ${kneeY}L${x} ${y}`);
+    set(side+'Foot','d',`M${x-7} ${y}h25`);
+    set(side+'Pedal','d',`M${x-10} ${y+7}h29`);
+    return {x,y};
+  }
+  function draw(){
+    const phase=time*2*Math.PI/1.6,bob=2.8*Math.sin(phase*2);
+    const wheelAngle=time*120;
+    set('rearWheel','transform',`translate(351 392) rotate(${wheelAngle})`);
+    set('frontWheel','transform',`translate(669 392) rotate(${wheelAngle})`);
+    set('bird','transform',`translate(0 ${bob})`);
+    const near=leg('near',phase,bob),far=leg('far',phase+Math.PI,bob);
+    set('crank','d',`M${far.x} ${far.y}L${near.x} ${near.y}`);
+    set('clouds','transform',`translate(${-((time*11)%1000)} 0)`);
+    set('hillPattern','patternTransform',`translate(${-((time*27)%1000)} 0)`);
+    set('groundPattern','patternTransform',`translate(${-((time*161)%300)} 0)`);
+    set('scarf','transform',`rotate(${3*Math.sin(phase*2)} 550 169)`);
+    set('shadow','rx',222+2*Math.sin(phase*2));
+  }
+  function label(){button.textContent=paused?'继续兜风 ▷':'暂停动画 Ⅱ';button.setAttribute('aria-pressed',String(paused));}
+  button.addEventListener('click',()=>{paused=!paused;label();});
+  let frame=null;
+  function schedule(){if(frame===null&&!paused&&!document.hidden)frame=requestAnimationFrame(tick);}
+  function tick(now){frame=null;if(paused||document.hidden){last=null;return;}if(last!==null)time+=Math.min((now-last)/1000,.05);last=now;draw();schedule();}
+  function syncPlayback(){last=null;if(frame!==null){cancelAnimationFrame(frame);frame=null;}schedule();}
+  button.addEventListener('click',syncPlayback);
+  document.addEventListener('visibilitychange',syncPlayback);
+  matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change',event=>{paused=event.matches;label();syncPlayback();});
+  label();draw();schedule();
+})();
+</script>
+</body>
+</html>
