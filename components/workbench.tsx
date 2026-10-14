@@ -335,7 +335,7 @@ export function Workbench() {
       <section className="function-section" id="functions" aria-labelledby="function-area-title">
         <h2 id="function-area-title">功能区</h2>
         <div className="public-modules function-grid">
-        <a className="public-module-card" href="#knowledge"><span className="public-module-icon"><BookOpen /></span><span><strong>知识库</strong><small>道德经 · 齐物论 · 原文与注音简释</small></span><ArrowUpRight /></a>
+        <a className="public-module-card" href="#knowledge"><span className="public-module-icon"><BookOpen /></span><span><strong>知识库</strong><small>古籍与经济学 · 双语阅读与标记</small></span><ArrowUpRight /></a>
         {plannedModules.map((module) => {
           const Icon = module.icon;
           return <a className="public-module-card" href={`#${module.id}`} key={module.id}>
