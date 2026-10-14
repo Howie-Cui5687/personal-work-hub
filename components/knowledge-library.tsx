@@ -96,10 +96,12 @@ export function KnowledgeLibrary() {
       </ul>
     </section>
     {!dao && !qiwu ? <>
-      <header className="knowledge-heading"><p className="section-kicker">KNOWLEDGE LIBRARY · 公开阅读</p><h1>知识库</h1><p>读经典，留一处慢慢理解的地方。</p></header>
+      <header className="knowledge-heading"><p className="section-kicker">KNOWLEDGE LIBRARY · 公开阅读</p><h1>知识库</h1><p>读经典，也读经济世界的运行方式。</p></header>
       <div className="book-grid">
         <article className="book-card"><div className="book-spine">道</div><div><span>老子 · 先秦</span><h2>道德经</h2><p>八十一章，九个 Part。原文、注音与随文简释。</p><a href="#knowledge/daodejing/1">开始阅读 <ArrowRight size={17} /></a></div></article>
         <article className="book-card"><div className="book-spine">庄</div><div><span>庄子 · 内篇第二</span><h2>齐物论</h2><p>从天籁到梦蝶，按原文自然段阅读全文。</p><a href="#knowledge/qiwulun">开始阅读 <ArrowRight size={17} /></a></div></article>
+        <article className="book-card"><div className="book-spine">富</div><div><span>亚当·斯密 · 1776 · 公版</span><h2>国富论</h2><p>从劳动分工、价格与资本积累出发，理解古典经济学如何解释财富与市场秩序。</p><a href="https://github.com/GITenberg/An-Inquiry-into-the-Nature-and-Causes-of-the-Wealth-of-Nations_3300" target="_blank" rel="noreferrer">GitHub 阅读 <ArrowRight size={17} /></a></div></article>
+        <article className="book-card"><div className="book-spine">经</div><div><span>OpenStax · 现代开放教材</span><h2>经济学原理 3e</h2><p>覆盖微观与宏观经济学，系统学习机会成本、供求、市场失灵、增长与政策工具。</p><a href="https://github.com/openstax/osbooks-principles-economics-bundle" target="_blank" rel="noreferrer">GitHub 阅读 <ArrowRight size={17} /></a></div></article>
       </div>
       <section className="library-editorial"><BookOpen size={20} /><p>简体整理，保留底本文字及异体字。生僻词上方为现代普通话拼音，括号内是本站整理的简短助读释义；古籍异读、断句及解释有分歧，不作为唯一训诂结论。正文来源及许可见各书阅读页。</p></section>
     </> : <>
