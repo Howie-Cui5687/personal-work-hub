@@ -55,6 +55,10 @@ function scrollToSearchHit(hash: string) {
 }
 
 export function KnowledgeLibrary() {
+  const [localBooks, setLocalBooks] = useState<{id:string;title:string;chapters:number}[]>([]);
+  useEffect(() => {
+    fetch('reading/additional-books.json').then(r => r.ok ? r.json() : []).then(setLocalBooks).catch(() => {});
+  }, []);
   const [selection, setSelection] = useState('');
   const [notes, setNotes] = useState(true);
   const [query, setQuery] = useState('');
@@ -98,6 +102,7 @@ export function KnowledgeLibrary() {
     {!dao && !qiwu ? <>
       <header className="knowledge-heading"><p className="section-kicker">KNOWLEDGE LIBRARY · 公开阅读</p><h1>知识库</h1><p>读经典，也读经济世界的运行方式。</p></header>
       <div className="book-grid">
+        {localBooks.map(book => <article className="book-card" key={book.id}><div className="book-spine">{book.title[0]}</div><div><span>个人导入 · 中英对照 · {book.chapters} 节</span><h2>{book.title}</h2><p>中文原文与英文助读译文逐段对照，英文生词音标，支持高亮、批注和书签。英文根据中文翻译，并非英文原著。</p><a href={`reading/?book=${book.id}`}>中英阅读与标记 <ArrowRight size={17} /></a></div></article>)}
         <article className="book-card"><div className="book-spine">道</div><div><span>老子 · 先秦</span><h2>道德经</h2><p>八十一章，九个 Part。原文、注音与随文简释。</p><a href="#knowledge/daodejing/1">开始阅读 <ArrowRight size={17} /></a></div></article>
         <article className="book-card"><div className="book-spine">庄</div><div><span>庄子 · 内篇第二</span><h2>齐物论</h2><p>从天籁到梦蝶，按原文自然段阅读全文。</p><a href="#knowledge/qiwulun">开始阅读 <ArrowRight size={17} /></a></div></article>
         <article className="book-card"><div className="book-spine">富</div><div><span>亚当·斯密 · 1776 · 中英对照</span><h2>国富论</h2><p>从劳动分工、价格与资本积累出发，理解财富与市场秩序。逐段中文助读、生词音标，支持高亮、批注和书签。</p><a href="reading/?book=wealth">双语阅读与标记 <ArrowRight size={17} /></a></div></article>

@@ -7,12 +7,15 @@ import argparse
 root = Path(__file__).resolve().parents[1]
 site = root / 'dist/client'
 reading = root / 'public/reading'
+private_reading = root / 'work/private-reading'
 
 class Preview(SimpleHTTPRequestHandler):
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(site),**kwargs)
     def translate_path(self,path):
         relative=unquote(urlparse(path).path).lstrip('/')
         if relative=='reading' or relative.startswith('reading/'):
+            local_candidate=(private_reading/relative.removeprefix('reading').lstrip('/')).resolve()
+            if local_candidate.is_relative_to(private_reading.resolve()) and local_candidate.is_file():return str(local_candidate)
             candidate=(reading/relative.removeprefix('reading').lstrip('/')).resolve()
             if candidate.is_relative_to(reading.resolve()) and 'source-cache' not in candidate.parts:return str(candidate)
             return str(reading/'not-found')
